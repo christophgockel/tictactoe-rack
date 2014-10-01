@@ -12,7 +12,6 @@
   <body>
     <header>
       <h1><a href="/">Tic Rack Toe</a></h1>
-      <h2><%= game_mode %></h2>
     </header>
 
     <main>
@@ -24,7 +23,7 @@
               <td class="<%= cell %>">
                 <% if cell %>
                   <%= cell %>
-                <% elsif game_is_ongoing %>
+                <% elsif game_is_ongoing && !game_is_ready %>
                   <a href="/game/play?move=<%= move_index %>">&nbsp;</a>
                 <% end %>
               </td>

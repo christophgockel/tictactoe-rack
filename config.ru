@@ -4,12 +4,12 @@ require 'tictactoe/game'
 require 'tictactoe/board'
 require 'tictactoe/player_factory'
 
-#require 'tictactoe-rack/request_converter'
 require File.dirname(__FILE__) + '/lib/tictactoe-rack/request_converter.rb'
 require File.dirname(__FILE__) + '/lib/tictactoe-rack/index_view_model.rb'
+require File.dirname(__FILE__) + '/lib/tictactoe-rack/controller.rb'
 
 class Display
-  attr_reader :status, :board, :game_mode
+  attr_reader :status, :board
   attr_accessor :move, :game_is_ready, :game_is_ongoing
 
   def initialize
@@ -47,26 +47,22 @@ class Display
 
   def next_move
     the_move = @move
-    @move = nil
+    @move = 0
     the_move
   end
 
   def can_provide_next_move?
+    return @move != 0
     !@move.nil?
-  end
-
-  def game_mode=(mode)
-    @game_mode = mode.to_s.split('_').map{ |part| part.capitalize}.join(' vs. ')
   end
 end
 
 app = Rack::Builder.new do |env|
-  use Rack::Static, urls: ["/css", "/images"], root: "lib/assets"
+  use Rack::Static, urls: ["/css"], root: "lib/assets"
 
   display = Display.new
-  players = TicTacToe::PlayerFactory.create_pair(:human_computer, display)
-  game = nil
   options = {}
+  controller = nil
 
   map "/game" do
     map "/" do
@@ -76,8 +72,8 @@ app = Rack::Builder.new do |env|
 
         content = ERB.new(file)
 
-        display.game_is_ready = game.is_playable?
-        display.game_is_ongoing = game.is_ongoing?
+        display.game_is_ready = controller.game.is_playable?
+        display.game_is_ongoing = controller.game.is_ongoing?
 
         [200, {}, [content.result(display.the_binding)]]
       end)
@@ -89,10 +85,7 @@ app = Rack::Builder.new do |env|
         options[:board_size] = request.board_size
         options[:game_mode] = request.game_mode
 
-        display.game_mode = options[:game_mode]
-
-        players = TicTacToe::PlayerFactory.create_pair(options[:game_mode], display)
-        game = TicTacToe::Game.new(players.first, players.last, TicTacToe::Board.create(options[:board_size]), display)
+        controller.create_game(options[:board_size], options[:game_mode], display)
 
         [302, {"Location" => "/game"}, []]
       end)
@@ -105,15 +98,15 @@ app = Rack::Builder.new do |env|
 
         display.move = move
 
-        game.play_next_round
+        controller.play(move)
 
         [302, {"Location" => "/game"}, []]
       end)
     end
+
     map "/restart" do
       run(Proc.new do |env|
-        players = TicTacToe::PlayerFactory.create_pair(options[:game_mode], display)
-        game = TicTacToe::Game.new(players.first, players.last, TicTacToe::Board.create(options[:board_size]), display)
+        controller.restart
 
         [302, {"Location" => "/game"}, []]
       end)
@@ -125,6 +118,7 @@ app = Rack::Builder.new do |env|
       path = File.expand_path("lib/tictactoe-rack/index.html.erb")
       file = File.read(path)
 
+      controller = TicTacToeRack::Controller.new
       model = TicTacToeRack::IndexViewModel.new(TicTacToe::Board.available_sizes, TicTacToe::PlayerFactory.available_player_pairs)
 
       content = ERB.new(file)
