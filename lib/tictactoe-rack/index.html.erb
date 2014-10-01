@@ -16,35 +16,23 @@
       <fieldset>
         <legend>Board Size</legend>
 
+        <% board_sizes.each do |key, description| %>
         <label class="pure-radio">
-          <input type="radio" name="board_size" value="board_3x3" checked/>
-          3x3
+          <input type="radio" name="board_size" value="<%= key.to_s %>" checked/>
+          <%= description %>
         </label>
-        <label class="pure-radio">
-          <input type="radio" name="board_size" value="board_4x4"/>
-          4x4
-        </label>
+        <% end %>
       </fieldset>
 
       <fieldset>
         <legend>Game Mode</legend>
 
+        <% game_modes.each do |key, description| %>
         <label class="pure-radio">
-          <input type="radio" name="game_mode" value="human_human" checked/>
-          Human vs. Human
+          <input type="radio" name="game_mode" value="<%= key.to_s %>" checked/>
+          <%= description %>
         </label>
-        <label class="pure-radio">
-          <input type="radio" name="game_mode" value="human_computer"/>
-          Human vs. Computer
-        </label>
-        <label class="pure-radio">
-          <input type="radio" name="game_mode" value="computer_human"/>
-          Computer vs. Human
-        </label>
-        <label class="pure-radio">
-          <input type="radio" name="game_mode" value="computer_computer"/>
-          Computer vs. Computer
-        </label>
+        <% end %>
       </fieldset>
 
       <button type="submit" class="pure-button pure-input-1 pure-button-primary">Play!</button>

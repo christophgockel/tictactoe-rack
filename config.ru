@@ -4,6 +4,10 @@ require 'tictactoe/game'
 require 'tictactoe/board'
 require 'tictactoe/player_factory'
 
+#require 'tictactoe-rack/request_converter'
+require File.dirname(__FILE__) + '/lib/tictactoe-rack/request_converter.rb'
+require File.dirname(__FILE__) + '/lib/tictactoe-rack/index_view_model.rb'
+
 class Display
   attr_reader :status, :board, :game_mode
   attr_accessor :move, :game_is_ready, :game_is_ongoing
@@ -81,9 +85,9 @@ app = Rack::Builder.new do |env|
 
     map "/new" do
       run(Proc.new do |env|
-        request = Rack::Request.new(env)
-        options[:board_size] = request.params["board_size"].to_sym
-        options[:game_mode] = request.params["game_mode"].to_sym
+        request = TicTacToeRack::RequestConverter.new(Rack::Request.new(env))
+        options[:board_size] = request.board_size
+        options[:game_mode] = request.game_mode
 
         display.game_mode = options[:game_mode]
 
@@ -96,8 +100,8 @@ app = Rack::Builder.new do |env|
 
     map "/play" do
       run(Proc.new do |env|
-        request = Rack::Request.new(env)
-        move = request.params["move"].to_i
+        request = TicTacToeRack::RequestConverter.new(Rack::Request.new(env))
+        move = request.move
 
         display.move = move
 
@@ -118,13 +122,14 @@ app = Rack::Builder.new do |env|
 
   map "/" do
     run(Proc.new do |env|
-      request = Rack::Request.new(env)
       path = File.expand_path("lib/tictactoe-rack/index.html.erb")
       file = File.read(path)
 
+      model = TicTacToeRack::IndexViewModel.new(TicTacToe::Board.available_sizes, TicTacToe::PlayerFactory.available_player_pairs)
+
       content = ERB.new(file)
 
-      [200, {}, [content.result(display.the_binding)]]
+      [200, {}, [content.result(model.the_binding)]]
     end)
   end
 end
