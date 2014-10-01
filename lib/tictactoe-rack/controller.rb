@@ -10,9 +10,9 @@ module TicTacToeRack
       @game_mode  = game_mode
       @display    = display
 
-      players = TicTacToe::PlayerFactory.create_pair(game_mode, display)
+      players = TicTacToe::PlayerFactory.create_pair(game_mode, @display)
       @board = TicTacToe::Board.create(board_size)
-      @game = TicTacToe::Game.new(players.first, players.last, board, display)
+      @game = TicTacToe::Game.new(players.first, players.last, board, @display)
     end
 
     def play(move)

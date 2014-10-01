@@ -1,6 +1,7 @@
 require 'tictactoe/shared_examples'
 require 'tictactoe/game'
 require 'tictactoe-rack/controller'
+require 'tictactoe-rack/dummy_display'
 
 describe TicTacToeRack::Controller do
   let(:controller) { described_class.new }
@@ -44,36 +45,5 @@ describe TicTacToeRack::Controller do
   context 'DummyDisplay' do
     subject { DummyDisplay.new }
     it_should_behave_like 'a game io object'
-  end
-
-  class DummyDisplay
-    attr_reader :move
-
-    def show_board(board)
-    end
-
-    def announce_next_player(mark)
-    end
-
-    def show_invalid_move_message
-    end
-
-    def announce_winner(mark)
-    end
-
-    def announce_draw
-    end
-
-    def can_provide_next_move?
-      true
-    end
-
-    def next_move
-      @move
-    end
-
-    def move=(move)
-      @move = move
-    end
   end
 end
