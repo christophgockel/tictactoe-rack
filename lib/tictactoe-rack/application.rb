@@ -1,3 +1,5 @@
+require 'erb'
+
 require 'tictactoe-rack/controller'
 require 'tictactoe-rack/index_view_model'
 require 'tictactoe-rack/request_converter'
