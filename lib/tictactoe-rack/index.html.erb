@@ -16,9 +16,9 @@
       <fieldset>
         <legend>Board Size</legend>
 
-        <% board_sizes.each do |key, description| %>
+        <% board_sizes.each_with_index do |(key, description), index| %>
         <label class="pure-radio">
-          <input type="radio" name="board_size" value="<%= key.to_s %>" checked/>
+          <input type="radio" name="board_size" value="<%= key.to_s %>"<%= index == 0 ? " checked" : "" %>/>
           <%= description %>
         </label>
         <% end %>
@@ -27,9 +27,9 @@
       <fieldset>
         <legend>Game Mode</legend>
 
-        <% game_modes.each do |key, description| %>
+        <% game_modes.each_with_index do |(key, description), index| %>
         <label class="pure-radio">
-          <input type="radio" name="game_mode" value="<%= key.to_s %>" checked/>
+          <input type="radio" name="game_mode" value="<%= key.to_s %>"<%= index == 0 ? " checked" : ""%>/>
           <%= description %>
         </label>
         <% end %>
