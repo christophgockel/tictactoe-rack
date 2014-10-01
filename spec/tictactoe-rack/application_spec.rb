@@ -114,6 +114,24 @@ describe TicTacToeRack::Application do
         expect(last_response.redirect?).to eq true
         expect(last_response["Location"]).to eq "/game"
       end
+
+      context "game is over" do
+        it "redirects to the board display" do
+          let_player_one_win
+          get "/game/play", {"move" => "9"}
+
+          expect(last_response.redirect?).to eq true
+          expect(last_response["Location"]).to eq "/game"
+        end
+
+        def let_player_one_win
+          get "/game/play", {"move" => "1"}
+          get "/game/play", {"move" => "4"}
+          get "/game/play", {"move" => "2"}
+          get "/game/play", {"move" => "5"}
+          get "/game/play", {"move" => "3"}
+        end
+      end
     end
   end
 end

@@ -68,10 +68,12 @@ module TicTacToeRack
 
           map "/play" do
             run(Proc.new do |env|
-              request = TicTacToeRack::RequestConverter.new(Rack::Request.new(env))
-              controller.play(request.move)
-
-              [302, {"Location" => "/game"}, []]
+              begin
+                request = TicTacToeRack::RequestConverter.new(Rack::Request.new(env))
+                controller.play(request.move)
+              ensure
+                next [302, {"Location" => "/game"}, []]
+              end
             end)
           end
         end
