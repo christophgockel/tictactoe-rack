@@ -1,4 +1,5 @@
 require 'erb'
+require 'sprockets'
 
 require 'tictactoe-rack/controller'
 require 'tictactoe-rack/index_view_model'
@@ -18,7 +19,14 @@ module TicTacToeRack
       controller = @controller
 
       Rack::Builder.new do |env|
-        use Rack::Static, urls: ["/css"], root: "lib/assets"
+#        use Rack::Static, urls: ["/css"], root: "lib/assets"
+
+        map "/assets" do
+          environment = Sprockets::Environment.new
+          environment.append_path 'lib/assets/js'
+          environment.append_path 'lib/assets/css'
+          run environment
+        end
 
         map "/" do
           run(Proc.new do |env|
