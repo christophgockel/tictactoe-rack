@@ -2,7 +2,6 @@
 <html>
   <head>
     <title>Tic Rack Toe</title>
-    <link rel="stylesheet" href="/assets/pure-min.css">
     <link rel="stylesheet" href="/assets/tictactoe.css">
   </head>
 
@@ -12,12 +11,12 @@
     </header>
 
     <main>
-      <form class="pure-form" method="post" action="/game/new">
+      <form class="game-option-form" method="post" action="/game/new">
         <fieldset>
           <legend>Board Size</legend>
 
           <% board_sizes.each_with_index do |(key, description), index| %>
-            <label class="pure-radio">
+            <label class="game-option">
               <input type="radio" name="board_size" value="<%= key.to_s %>"<%= index == 0 ? " checked" : "" %>/>
               <%= description %>
             </label>
@@ -28,14 +27,14 @@
           <legend>Game Mode</legend>
 
           <% game_modes.each_with_index do |(key, description), index| %>
-            <label class="pure-radio">
+            <label class="game-option">
               <input type="radio" name="game_mode" value="<%= key.to_s %>"<%= index == 0 ? " checked" : ""%>/>
               <%= description %>
             </label>
           <% end %>
         </fieldset>
 
-        <button type="submit" class="pure-button pure-input-1 pure-button-primary">Play!</button>
+        <button type="submit" class="play-game">Play!</button>
       </form>
     </main>
   </body>
