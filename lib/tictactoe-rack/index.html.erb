@@ -12,31 +12,31 @@
     </header>
 
     <main>
-    <form class="pure-form" method="post" action="/game/new">
-      <fieldset>
-        <legend>Board Size</legend>
+      <form class="pure-form" method="post" action="/game/new">
+        <fieldset>
+          <legend>Board Size</legend>
 
-        <% board_sizes.each_with_index do |(key, description), index| %>
-        <label class="pure-radio">
-          <input type="radio" name="board_size" value="<%= key.to_s %>"<%= index == 0 ? " checked" : "" %>/>
-          <%= description %>
-        </label>
-        <% end %>
-      </fieldset>
+          <% board_sizes.each_with_index do |(key, description), index| %>
+            <label class="pure-radio">
+              <input type="radio" name="board_size" value="<%= key.to_s %>"<%= index == 0 ? " checked" : "" %>/>
+              <%= description %>
+            </label>
+          <% end %>
+        </fieldset>
 
-      <fieldset>
-        <legend>Game Mode</legend>
+        <fieldset>
+          <legend>Game Mode</legend>
 
-        <% game_modes.each_with_index do |(key, description), index| %>
-        <label class="pure-radio">
-          <input type="radio" name="game_mode" value="<%= key.to_s %>"<%= index == 0 ? " checked" : ""%>/>
-          <%= description %>
-        </label>
-        <% end %>
-      </fieldset>
+          <% game_modes.each_with_index do |(key, description), index| %>
+            <label class="pure-radio">
+              <input type="radio" name="game_mode" value="<%= key.to_s %>"<%= index == 0 ? " checked" : ""%>/>
+              <%= description %>
+            </label>
+          <% end %>
+        </fieldset>
 
-      <button type="submit" class="pure-button pure-input-1 pure-button-primary">Play!</button>
-    </form>
+        <button type="submit" class="pure-button pure-input-1 pure-button-primary">Play!</button>
+      </form>
     </main>
   </body>
 </html>
