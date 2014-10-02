@@ -5,6 +5,7 @@ require "tictactoe-rack/dummy_display"
 
 describe TicTacToeRack::Application do
   include Rack::Test::Methods
+
   let(:display) { DummyDisplay.new }
   let(:application) { described_class.new(display) }
 
@@ -131,6 +132,19 @@ describe TicTacToeRack::Application do
           get "/game/play", {"move" => "5"}
           get "/game/play", {"move" => "3"}
         end
+      end
+    end
+
+    context "game loop" do
+      it "adds meta tag to support automatic moves" do
+        get "/game/new", {"board_size" => "board_3x3", "game_mode" => "human_computer"}
+        get "/game/play", {"move" => "1"}
+
+        follow_redirect!
+
+        expect(last_response).to be_ok
+        expect(last_response.body).to include 'http-equiv="refresh"'
+        expect(last_response.body).to include 'content="0;URL=/game/play">'
       end
     end
   end
